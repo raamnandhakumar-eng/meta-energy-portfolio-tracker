@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Public-data hyperscaler energy portfolio operations tracker." />
+  <title>Energy Portfolio Operations — Public Data v2</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-frame">
+    <aside class="side-rail" aria-label="Primary navigation">
+      <div class="brand-lockup">
+        <div>
+          <div class="brand-name">Infrastructure Energy</div>
+          <div class="brand-sub">Portfolio operations</div>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <a class="nav-item active" href="#overview"><span class="nav-icon">◫</span><span>Overview</span></a>
+        <a class="nav-item" href="#delivery"><span class="nav-icon">◷</span><span>Delivery</span></a>
+        <a class="nav-item" href="#portfolio"><span class="nav-icon">▥</span><span>Portfolio</span></a>
+        <a class="nav-item" href="#exposure"><span class="nav-icon">◎</span><span>Exposure</span></a>
+        <a class="nav-item" href="#assets"><span class="nav-icon">☷</span><span>Asset register</span></a>
+      </nav>
+
+      <div class="rail-footer">
+        <div class="public-badge"><span class="status-dot"></span> Public model</div>
+        <div class="rail-note">Independent learning exercise.<br>Not an internal Meta tool.</div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="workspace-header">
+        <div class="header-copy">
+          <div class="breadcrumb">Energy / Portfolio operations</div>
+          <div class="title-row">
+            <h1>Portfolio health</h1>
+            <span class="snapshot-pill">Snapshot · 09 Sep 2026</span>
+          </div>
+          <p>Monitor disclosed capacity, delivery risk, firm-capacity scenarios, concentration, and data quality.</p>
+        </div>
+        <div class="header-actions">
+          <button id="methodBtn" class="button secondary">Methodology</button>
+          <a class="button" href="/docs/DATA_MODEL.md" target="_blank" rel="noreferrer">Data model ↗</a>
+        </div>
+      </header>
+
+      <section class="boundary-banner" role="note">
+        <span class="info-icon">i</span>
+        <div><strong>Public-data boundary.</strong> Hyperion 5 GW and Prometheus 1 GW are public compute/cluster scale, not disclosed electrical peak load. Firmness is a screening scenario, not ELCC, UCAP, or ISO-accredited capacity.</div>
+      </section>
+
+      <section class="view-toolbar" aria-label="Portfolio filters">
+        <div class="toolbar-group scope-group">
+          <span class="toolbar-label">Portfolio view</span>
+          <div class="segmented" role="group" aria-label="scope">
+            <button class="seg active" data-scope="committed">Committed</button>
+            <button class="seg" data-scope="pipeline">+ Pipeline</button>
+          </div>
+        </div>
+        <div class="toolbar-divider"></div>
+        <label><span>Market</span><select id="marketFilter"><option value="all">All markets</option></select></label>
+        <label><span>Technology</span><select id="techFilter"><option value="all">All technologies</option></select></label>
+        <label><span>Risk</span><select id="riskFilter"><option value="all">All risk</option><option value="flagged">COD-risk flagged</option><option value="high">Any high-risk cause</option></select></label>
+        <label><span>Firm scenario</span><select id="scenarioFilter"><option value="low">Low</option><option value="base" selected>Base</option><option value="high">High</option></select></label>
+        <button id="resetBtn" class="reset-button">Reset</button>
+      </section>
+
+      <section id="overview" class="ops-section">
+        <div class="section-heading">
+          <div><h2>Overview</h2><p>Current portfolio status and highest-priority issues.</p></div>
+          <span class="section-meta">Decision view</span>
+        </div>
+
+        <section class="command-grid">
+          <article class="health-card card" id="healthCard"></article>
+          <article class="attention-card card">
+            <div class="card-head"><div><span class="card-kicker">Priority queue</span><h3>Needs attention</h3></div><span class="unit">impact · risk · data gaps</span></div>
+            <div id="attentionList" class="attention-list"></div>
+          </article>
+        </section>
+
+        <section class="kpis" id="kpis"></section>
+      </section>
+
+      <section id="delivery" class="ops-section">
+        <div class="section-heading">
+          <div><h2>Delivery & firmness</h2><p>Where capacity is located, when it is expected, and how much may contribute under screening scenarios.</p></div>
+          <span class="section-meta">Planning view</span>
+        </div>
+
+        <section class="grid main-grid">
+          <article class="card chart-card"><div class="card-head"><div><span class="card-kicker">Capacity</span><h3>By market</h3></div><span class="unit">MWac</span></div><div id="marketChart" class="bar-chart"></div></article>
+          <article class="card chart-card"><div class="card-head"><div><span class="card-kicker">Firmness</span><h3>Scenario range</h3></div><span class="unit">screening MW</span></div><div id="firmScenario"></div></article>
+          <article class="card chart-card"><div class="card-head"><div><span class="card-kicker">Delivery risk</span><h3>Exposure by cause</h3></div><span class="unit">MWac</span></div><div id="riskExposure" class="bar-chart"></div></article>
+          <article class="card campus-card"><div class="card-head"><div><span class="card-kicker">Campus support</span><h3>Supply build vs ultimate scale</h3></div><span class="unit">public COD</span></div><div id="campusTimeline"></div></article>
+        </section>
+      </section>
+
+      <section id="portfolio" class="ops-section">
+        <div class="section-heading">
+          <div><h2>Portfolio structure</h2><p>Concentration and data quality across the selected view.</p></div>
+          <span class="section-meta">Risk view</span>
+        </div>
+
+        <section class="grid lower-grid">
+          <article class="card concentration-card"><div class="card-head"><div><span class="card-kicker">Counterparty</span><h3>Exposure</h3></div><span class="unit" id="counterpartyHHI"></span></div><div id="counterpartyChart" class="bar-chart compact"></div></article>
+          <article id="exposure" class="card concentration-card"><div class="card-head"><div><span class="card-kicker">Market</span><h3>Exposure</h3></div><span class="unit" id="marketHHI"></span></div><div id="marketShareChart" class="bar-chart compact"></div></article>
+          <article class="card quality-card"><div class="card-head"><div><span class="card-kicker">Data quality</span><h3>Confidence & gaps</h3></div><span class="unit">current view</span></div><div id="qualityList" class="quality-list"></div></article>
+          <article class="card insight-card"><div class="card-head"><div><span class="card-kicker">Matching</span><h3>Annual matched %</h3></div><span class="status-pill warn">Not defensible</span></div><p class="big-insight">Capacity can be modeled publicly. Matching cannot be proven publicly.</p><p>Facility load, allocation, settled MWh, REC/EAC retirement, curtailment, and temporal rules are missing.</p><button id="whyBtn" class="inline-action">View 24-hour thought experiment →</button></article>
+        </section>
+      </section>
+
+      <section id="assets" class="ops-section asset-section">
+        <div class="section-heading asset-heading">
+          <div><h2>Asset register</h2><p>Source-level rows behind every portfolio metric.</p></div>
+          <div id="tableCount" class="table-count"></div>
+        </div>
+
+        <section class="card table-card">
+          <div class="table-wrap"><table><thead><tr><th>Asset / counterparty</th><th>Market</th><th>Technology</th><th>Capacity</th><th>COD / status</th><th>Firm range</th><th>Data confidence</th><th>COD risk</th><th></th></tr></thead><tbody id="assetRows"></tbody></table></div>
+        </section>
+      </section>
+
+      <footer>Independent public-data exercise · Not affiliated with Meta · No internal contract, settlement, load, or queue data used.</footer>
+    </main>
+  </div>
+
+  <dialog id="methodDialog"><div class="dialog-head"><div><span class="card-kicker">Methodology</span><h2>How the portfolio is scored</h2></div><button class="icon-button" data-close="methodDialog" aria-label="Close">×</button></div><div class="dialog-body"><div id="methodContent"></div></div></dialog>
+  <dialog id="whyDialog"><div class="dialog-head"><div><span class="card-kicker">Matching</span><h2>Why annual MWh is not enough</h2></div><button class="icon-button" data-close="whyDialog" aria-label="Close">×</button></div><div class="dialog-body"><p>A portfolio can over-cover annual energy and still miss important hours. The profile below is an illustrative technology-shape experiment only. It is not Meta load or settlement data.</p><div id="hourlyShape" class="hourly-shape"></div><p class="small-note">Generic solar shape plus flat thermal/geothermal contribution. Batteries are excluded because duration and dispatch are not public.</p><blockquote>“I wanted to understand the portfolio properly, so I tried to build a health view from public data. The biggest lesson was how many judgment calls sit inside a number that looks simple, like contracted capacity.”</blockquote></div></dialog>
+  <dialog id="assetDialog"><div class="dialog-head"><div><span class="card-kicker">Data lineage</span><h2 id="assetDialogTitle">Asset details</h2></div><button class="icon-button" data-close="assetDialog" aria-label="Close">×</button></div><div class="dialog-body" id="assetDialogBody"></div></dialog>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
