@@ -64,8 +64,13 @@ The repository is ready for a static Vercel deployment. Import the GitHub reposi
 ├── index.html
 ├── styles.css
 ├── app.js
+├── data-loader.js
 ├── data/
-│   └── portfolio.json
+│   ├── core.json
+│   ├── assets-1.json
+│   ├── assets-2.json
+│   ├── assets-3.json
+│   └── assets-4.json
 ├── docs/
 │   └── DATA_MODEL.md
 ├── scripts/
