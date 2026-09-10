@@ -1,0 +1,75 @@
+{
+  "snapshot_date": "2026-09-09",
+  "scope_note": "High-confidence, publicly disclosed U.S. Meta energy agreements and utility-backed generation relevant to current AI/data-center buildout. This v1 is intentionally not a claim of exhaustiveness across Meta's full global portfolio.",
+  "campuses": [
+    {
+      "id": "hyperion",
+      "name": "Hyperion",
+      "location": "Richland Parish, Louisiana",
+      "market": "MISO",
+      "announced_compute_mw": 5000,
+      "load_proxy_mw": 5000,
+      "load_proxy_basis": "Meta announced 5 GW of compute capacity. Public meter-level electrical load is not disclosed; compute MW is used only as a directional proxy.",
+      "source_url": "https://datacenters.atmeta.com/2026/07/deepening-our-investment-in-richland-parish-louisiana/"
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "location": "New Albany, Ohio",
+      "market": "PJM",
+      "announced_compute_mw": 1000,
+      "load_proxy_mw": 1000,
+      "load_proxy_basis": "Meta describes Prometheus as a 1 GW AI cluster. Public meter-level electrical load is not disclosed; compute MW is used only as a directional proxy.",
+      "source_url": "https://engineering.fb.com/2026/02/09/data-center-engineering/building-prometheus-how-backend-aggregation-enables-gigawatt-scale-ai-clusters/"
+    }
+  ],
+  "assumptions": {
+    "capacity_factors": {
+      "Solar": 0.25,
+      "Nuclear": 0.91,
+      "Natural Gas CCGT": 0.584,
+      "Geothermal": 0.659
+    },
+    "firm_factors": {
+      "Solar": 0.0,
+      "Nuclear": 0.9,
+      "Natural Gas CCGT": 0.9,
+      "Geothermal": 0.9,
+      "Battery": 0.0,
+      "Renewable / undisclosed": 0.0
+    },
+    "notes": [
+      "Capacity factor is used only to estimate annual energy, not capacity adequacy.",
+      "Firm factor is a simple public-data proxy, not MISO/PJM accredited capacity, ELCC or UCAP.",
+      "Solar rows disclosed only in MWdc are excluded from normalized MWac totals until an AC rating is available.",
+      "Battery MW is power capacity, not annual generation; duration and dispatch determine energy contribution.",
+      "v2 firm scenarios are screening ranges used to test portfolio sensitivity. They are not market-specific accredited capacity values.",
+      "v2 portfolio health is an explainable composite intended to prioritize investigation, not to certify portfolio adequacy.",
+      "Campus timeline compares cumulative public supply by COD year with announced ultimate compute scale; it does not invent a facility demand ramp."
+    ],
+    "firm_scenarios": {
+      "Nuclear": {"low": 0.8, "base": 0.9, "high": 0.95},
+      "Natural Gas CCGT": {"low": 0.75, "base": 0.9, "high": 0.95},
+      "Geothermal": {"low": 0.75, "base": 0.9, "high": 0.95},
+      "Battery": {"low": 0.0, "base": 0.1, "high": 0.25},
+      "Renewable / undisclosed": {"low": 0.0, "base": 0.05, "high": 0.15}
+    },
+    "solar_firm_scenarios_by_market": {
+      "ERCOT": {"low": 0.05, "base": 0.15, "high": 0.3},
+      "MISO": {"low": 0.02, "base": 0.08, "high": 0.18},
+      "PJM": {"low": 0.02, "base": 0.07, "high": 0.15},
+      "SPP": {"low": 0.05, "base": 0.12, "high": 0.25},
+      "PNM / WECC": {"low": 0.05, "base": 0.15, "high": 0.3},
+      "default": {"low": 0.02, "base": 0.08, "high": 0.2}
+    },
+    "health_score_weights": {
+      "delivery": 0.35,
+      "firm_readiness": 0.25,
+      "market_diversification": 0.15,
+      "counterparty_diversification": 0.15,
+      "data_confidence": 0.1
+    },
+    "health_score_note": "Screening score only. It is an explainable learning construct, not a Meta KPI, ISO accreditation metric, or investment-grade risk model."
+  },
+  "version": "v2"
+}
