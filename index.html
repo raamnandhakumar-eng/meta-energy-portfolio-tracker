@@ -65,7 +65,7 @@
         <label><span>Technology</span><select id="techFilter"><option value="all">All technologies</option></select></label>
         <label><span>Risk</span><select id="riskFilter"><option value="all">All risk</option><option value="flagged">COD-risk flagged</option><option value="high">Any high-risk cause</option></select></label>
         <label><span>Firm scenario</span><select id="scenarioFilter"><option value="low">Low</option><option value="base" selected>Base</option><option value="high">High</option></select></label>
-        <button id="resetBtn" class="reset-button">Reset</button>
+        <button id="resetBtn" class="reset-button" aria-label="Apply selected portfolio filters">Enter</button>
       </section>
 
       <section id="overview" class="ops-section">
@@ -134,5 +134,6 @@
 
   <script src="/data-loader.js"></script>
   <script src="/app.js" defer></script>
+  <script src="/dynamic-health.js" defer></script>
 </body>
 </html>
