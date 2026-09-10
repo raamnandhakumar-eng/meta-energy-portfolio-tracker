@@ -2,7 +2,7 @@
 
 [**Live Demo → energy-portfolio-healthtracker.vercel.app**](https://energy-portfolio-healthtracker.vercel.app/)
 
-**Independent public-data learning project. Not affiliated with or endorsed by Meta or any other company. No internal company data is used.**
+**Independent public-data learning project. Not affiliated with or endorsed by any other company. No internal company data is used.**
 
 A decision-oriented energy portfolio health tracker built from public disclosures to explore how hyperscaler-scale and data-center energy portfolios can be normalized, monitored, and stress-tested.
 
