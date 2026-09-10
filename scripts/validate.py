@@ -2,7 +2,9 @@
 import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-DATA=json.loads((ROOT/'data'/'portfolio.json').read_text())
+core=json.loads((ROOT/'data'/'core.json').read_text())
+parts=[json.loads((ROOT/'data'/f'assets-{i}.json').read_text()) for i in range(1,5)]
+DATA={**core,'assets':[a for part in parts for a in part]}
 errors=[]; warnings=[]; ids=set(); allowed={'low','medium','high','unknown'}
 for a in DATA['assets']:
     aid=a.get('id')
