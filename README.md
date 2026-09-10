@@ -109,3 +109,5 @@ The validator checks required fields, unit normalization, risk labels, duplicate
 ## License
 
 MIT. See [`LICENSE`](LICENSE).
+
+<!-- deployment-sync: 2026-09-10 -->
