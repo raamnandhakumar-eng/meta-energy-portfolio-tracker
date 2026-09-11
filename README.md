@@ -6,6 +6,16 @@
 
 A decision-oriented energy portfolio health tracker built from public disclosures to explore how hyperscaler-scale and data-center energy portfolios can be normalized, monitored, and stress-tested.
 
+## Integration manager workflow
+
+- Run a planning-year scenario with 0–3 years of delay to flagged development assets. Compare baseline supply, delayed supply and unresolved COD capacity.
+- Track each regulatory, interconnection, construction and data issue with an editable owner, review date, status and evidence.
+- Close an action only after recording evidence. Closing diligence does not change public risk ratings or the health score.
+- Save a review baseline and compare capacity, health, COD/risk changes and added/removed assets under identical filters.
+- Download a Markdown brief with the applied scope, assumptions, next actions and source links.
+
+Actions and baselines stay in your browser. This is a public-data workflow demonstration, not a shared company system or procurement approval engine. No new public-source verification or live feed is implied.
+
 ## Current case study
 
 **Meta — public disclosures only.**
