@@ -2,8 +2,7 @@
 
 A public-data **energy portfolio control room** built to explore how an Energy Integration Manager could connect portfolio health, delivery risk, data quality, cross-functional actions, procurement readiness, and AI-assisted reporting in one operating view.
 
-[**Live app → energy-portfolio-healthtracker.vercel.app**](https://energy-portfolio-healthtracker.vercel.app/)  
-[**GitHub repository → raamnandhakumar-eng/energy-portfolio-health-tracker**](https://github.com/raamnandhakumar-eng/energy-portfolio-health-tracker)
+[**Live app → energy-portfolio-health-tracker.vercel.app**](https://energy-portfolio-health-tracker.vercel.app/)
 
 > Independent public-data learning project. Not affiliated with or endorsed by Meta or any other company. No internal company data is used.
 
@@ -56,7 +55,7 @@ The project intentionally preserves unknown values instead of manufacturing prec
 
 ## Data discipline
 
-Read [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) for the entity definitions, grain, units, assumptions, source families, formulas, refresh logic, and known limitations.
+Read `docs/DATA_MODEL.md` for the entity definitions, grain, units, assumptions, source families, formulas, refresh logic, and known limitations.
 
 Important rules:
 
@@ -115,4 +114,4 @@ The validator checks required fields, unit normalization, risk labels, duplicate
 
 ## License
 
-MIT. See [`LICENSE`](LICENSE).
+MIT. See `LICENSE`.
