@@ -1,58 +1,169 @@
-# Meta Energy Portfolio Health Tracker v2 — Data Model & Metric Definitions
+# Energy Portfolio Data Model v2
 
 **Snapshot:** 2026-09-09  
-**Purpose:** Public-data learning model for hyperscaler energy portfolio monitoring. Not an internal Meta system.
+**Purpose:** Public-data model for energy portfolio monitoring, delivery-risk screening, capacity normalization, and source traceability.
 
 ## 1. Modeling principles
 
-1. **Never mix MWdc and MWac.** MWac is the normalized capacity field. DC-only solar remains visible but excluded from normalized totals.
-2. **Do not call compute capacity electrical load.** Hyperion's 5 GW and Prometheus' 1 GW are used only as ultimate compute-scale reference points.
-3. **Separate power, energy and firmness.** MW, annual MWh and capacity contribution answer different questions.
-4. **Treat firm capacity as a scenario, not a fact.** v2 uses low/base/high screening factors. These are not ELCC, UCAP or ISO-accredited capacity values.
-5. **Preserve contract structure.** PPAs, utility-backed generation, nuclear support agreements, prepayments and options are not equivalent.
-6. **Unknown is a valid value.** Missing COD, queue data, market allocation, AC rating or technology stays unresolved.
-7. **Every score must decompose.** Portfolio health, data confidence and attention ranking expose their inputs and are not black-box outputs.
+1. **Never mix MWdc and MWac.** MWac is the normalized capacity field. DC-only solar remains visible but is excluded from normalized totals.
+2. **Do not treat compute capacity as electrical load.** Announced compute-scale values may be retained as contextual reference fields, but they are not used as measured or forecast electrical demand.
+3. **Separate power, energy, and firmness.** MW, annual MWh, and capacity contribution answer different questions and are modeled separately.
+4. **Treat firm capacity as a scenario, not a fact.** Low/base/high screening factors are analytical assumptions, not ELCC, UCAP, or ISO-accredited capacity values.
+5. **Preserve commercial structure.** PPAs, utility-backed generation, support agreements, prepayments, options, and other structures are distinct and should not be collapsed into one contract type.
+6. **Unknown is a valid value.** Missing COD, queue data, market allocation, AC rating, technology, or source detail remains unresolved rather than inferred.
+7. **Every score must decompose.** Portfolio health, data confidence, and attention ranking expose their component inputs.
 
 ## 2. Core entities and grain
 
 ### `campus`
-One publicly named Meta campus/supercluster. Key fields: `id`, `name`, `location`, `market`, `announced_compute_mw`, `load_proxy_mw`, `load_proxy_basis`, `source_url`.
+
+One publicly identified campus, facility cluster, or compute site.
+
+Key fields:
+
+- `id`
+- `name`
+- `location`
+- `market`
+- `announced_compute_mw`
+- `load_proxy_mw`
+- `load_proxy_basis`
+- `source_url`
+
+`announced_compute_mw` is contextual only. It is not assumed to equal electrical peak load.
 
 ### `asset`
-One public project, project block or distinct commercial commitment. Key fields: `asset_name`, `counterparty`, `market`, `technology`, `structure`, `status`, `capacity_mw_ac`, `capacity_mw_dc`, `capacity_basis`, `cod_year`, `campus_link`, `generation_cf`, three risk dimensions, and public source lineage.
 
-## 3. Base metrics
+One public energy project, project block, or distinct commercial commitment.
+
+Key fields:
+
+- `asset_name`
+- `counterparty`
+- `market`
+- `technology`
+- `structure`
+- `status`
+- `capacity_mw_ac`
+- `capacity_mw_dc`
+- `capacity_basis`
+- `count_in_normalized_capacity`
+- `cod_year`
+- `campus_link`
+- `generation_cf`
+- regulatory risk
+- interconnection risk
+- construction risk
+- source URL and source metadata
+
+## 3. Capacity normalization
 
 ### Normalized disclosed capacity
-`sum(capacity_mw_ac)` only where `count_in_normalized_capacity = true`.
 
-### Expected annual generation
-`expected_mwh = capacity_mw_ac × 8,760 × generation_cf`
+```text
+normalized_mw_ac = sum(capacity_mw_ac)
+```
 
-Capacity factors remain screening assumptions, not project-specific P50/P90 forecasts.
+Only rows where:
 
-### Firm-capacity scenario
-`firm_mw_scenario = capacity_mw_ac × scenario_factor(technology, market)`
+```text
+count_in_normalized_capacity = true
+```
 
-v2 uses low/base/high ranges. Nuclear, CCGT and geothermal receive dispatchable screening ranges. Solar uses market-varying coincidence ranges. Batteries remain conservative because public duration/accreditation is incomplete. These values are **not reliability-planning accreditation**.
+are included.
 
-## 4. Portfolio Health Score
+Rules:
 
-The score is a transparent learning construct:
+- MWdc and MWac are never added together.
+- DC-only disclosures remain visible but are excluded from normalized MWac totals.
+- Multi-project or multi-market aggregate announcements are not decomposed without a defensible public allocation.
+- Duplicate project blocks are excluded from aggregate totals when they represent the same underlying capacity.
 
-`Health = 35% Delivery + 25% Firm Readiness + 15% Market Diversification + 15% Counterparty Diversification + 10% Data Confidence`
+## 4. Expected annual generation
+
+```text
+expected_mwh = capacity_mw_ac × 8,760 × generation_cf
+```
+
+`generation_cf` is a screening assumption unless a project-specific public estimate is available.
+
+Expected annual generation is not treated as:
+
+- contracted settlement volume,
+- P50 or P90 production,
+- delivered energy,
+- environmental-attribute retirement,
+- hourly load matching.
+
+## 5. Firm-capacity scenarios
+
+```text
+firm_mw_scenario = capacity_mw_ac × scenario_factor(technology, market)
+```
+
+The model uses low, base, and high screening ranges.
+
+Typical treatment:
+
+- nuclear, CCGT, and geothermal receive dispatchable screening ranges;
+- solar receives market-dependent coincidence ranges;
+- batteries remain conservative where public duration or accreditation is incomplete;
+- unresolved technology or market data may receive reduced confidence or remain excluded from certain derived views.
+
+These values are not reliability-planning accreditation.
+
+## 6. Portfolio Health Score
+
+The model uses a transparent composite score:
+
+```text
+Health =
+35% Delivery
++ 25% Firm Readiness
++ 15% Market Diversification
++ 15% Counterparty Diversification
++ 10% Data Confidence
+```
 
 ### Delivery
-Capacity-weighted penalty across regulatory, interconnection and construction risk. Low = 0 penalty, unknown = partial penalty, medium = elevated penalty, high = maximum penalty.
+
+Capacity-weighted penalty across:
+
+- regulatory risk,
+- interconnection risk,
+- construction risk.
+
+Risk states are mapped to increasing penalties:
+
+- low,
+- unknown,
+- medium,
+- high.
 
 ### Firm readiness
-Base-scenario firm MW divided by normalized MWac. It is a composition/readiness indicator, not adequacy certification.
+
+```text
+firm_readiness = base_scenario_firm_mw / normalized_mw_ac
+```
+
+This is a portfolio-composition indicator, not a resource-adequacy certification.
 
 ### Diversification
-Market and counterparty diversification use MWac-share HHI. Lower HHI produces a higher diversification score.
+
+Market and counterparty diversification use capacity-share HHI.
+
+```text
+HHI = Σ share_i²
+```
+
+The displayed HHI is multiplied by 10,000.
+
+Lower concentration produces a higher diversification component score.
 
 ### Data confidence
-Asset-level score from:
+
+Asset-level confidence is based on:
+
 - capacity-unit resolution,
 - COD visibility,
 - market specificity,
@@ -60,83 +171,174 @@ Asset-level score from:
 - source traceability,
 - risk-dimension completeness.
 
-Capacity-weighted average confidence feeds the health score.
+Portfolio data confidence is calculated as a capacity-weighted average across normalized assets.
 
-## 5. “What needs attention” ranking
+## 7. Attention ranking
 
-Each asset receives an explainable priority score using:
-- risk severity,
+Each asset receives an explainable priority score based on:
+
+- high-risk causes,
 - multiple medium-risk causes,
-- share of scoped MWac,
+- share of scoped normalized MWac,
 - proximity of public COD,
-- data-confidence gap.
+- missing COD,
+- data-confidence gaps.
 
-The output is not “this project will fail.” It is “this is where a portfolio manager should investigate first.”
+The score indicates which rows deserve review first. It is not a forecast that a project will fail.
 
-## 6. Campus supply timeline
+## 8. Supply timeline
 
-For Hyperion and Prometheus, v2 calculates cumulative committed firm-scenario MW by public COD year and compares it with the announced ultimate compute-scale reference.
+For campus-linked or portfolio-linked assets, the model can calculate cumulative normalized or firm-scenario MW by disclosed COD year.
 
-It **does not invent a campus demand ramp**. Actual electrical demand, energization schedule, reserve requirements and meter-level load are not public.
+Rules:
 
-## 7. Concentration
+- operating assets are treated as available in the current portfolio view;
+- non-operating assets are included only when an integer COD year is present and falls within the selected horizon;
+- missing COD remains unresolved and is reported separately;
+- no demand ramp is invented;
+- no geographic deliverability is inferred solely from commercial linkage.
 
-Counterparty and market concentration are shown as capacity share and HHI:
+A dated capacity screen is not the same as confirmed energization, accredited capacity, or load coverage.
 
-`HHI = Σ share_i²`
+## 9. Lifecycle classification
 
-The displayed HHI is multiplied by 10,000. This is capacity concentration only, not credit exposure, contract value, basis exposure or mark-to-market.
+Physical lifecycle is derived from disclosed project status:
 
-## 8. Annual matched percentage
+- Operating
+- Commissioning
+- Construction
+- Development
 
-Still intentionally **not calculated as a definitive KPI**. Credible matching requires actual facility load, asset allocation, settled MWh, environmental-attribute ownership/retirement, curtailment, storage dispatch and temporal/geographic matching rules.
+Pre-construction rows remain in Development unless a clearer public status is available.
 
-v2 adds an illustrative 24-hour technology-shape experiment only to demonstrate why annual energy can look adequate while specific hours are not. It is not Meta load or settlement data.
+Lifecycle status does not establish the beginning of contractual delivery.
 
-## 9. Source and refresh design
+## 10. Concentration metrics
 
-| Source | Grain | Use | Refresh concept |
+Counterparty and market concentration are shown using:
+
+- normalized MWac share,
+- HHI.
+
+These metrics describe physical-capacity concentration only.
+
+They do not represent:
+
+- credit exposure,
+- contract value,
+- congestion basis,
+- mark-to-market,
+- settlement exposure.
+
+## 11. Annual matched percentage
+
+A definitive annual matched percentage is intentionally not calculated from public capacity data alone.
+
+Credible matching would require, at minimum:
+
+- facility load,
+- asset allocation,
+- settled MWh,
+- environmental-attribute ownership and retirement,
+- curtailment,
+- storage dispatch,
+- temporal matching rules,
+- geographic matching rules.
+
+A portfolio may appear over-covered on annual energy while remaining under-covered during specific hours.
+
+## 12. Risk dimensions
+
+Each asset may carry separate risk values for:
+
+### Regulatory risk
+
+Examples include:
+
+- pending approval,
+- open docket,
+- permitting dependency,
+- unresolved regulatory treatment.
+
+### Interconnection risk
+
+Examples include:
+
+- queue uncertainty,
+- network-upgrade dependency,
+- milestone uncertainty,
+- incomplete public queue matching.
+
+### Construction risk
+
+Examples include:
+
+- early development status,
+- construction dependency,
+- phased build uncertainty,
+- unresolved COD.
+
+Risk dimensions remain separate so one issue does not overwrite another.
+
+## 13. Source lineage
+
+Each asset should retain sufficient source metadata to reconstruct why the row exists and how its fields were populated.
+
+Recommended source fields:
+
+- `source_url`
+- `source_type`
+- `source_date`
+- `source_title`
+- `last_verified`
+- `notes`
+
+Source presence does not prove field accuracy. It records lineage.
+
+## 14. Source and refresh design
+
+| Source | Grain | Primary use | Refresh concept |
 |---|---|---|---|
-| Meta / developer / utility announcements | deal / project | terms, capacity, COD | weekly snapshot |
-| EIA Form 860 | generator | nameplate, status, owner | monthly/annual |
-| EIA 930 | balancing authority hourly | system context / future hourly experiment | daily/hourly |
-| ERCOT / MISO / SPP / PJM queues | interconnection request | queue milestone risk | weekly/monthly |
-| LPSC / PUCO dockets | regulatory proceeding | approval and schedule risk | weekly while open |
+| Company / developer / utility announcements | deal / project | structure, capacity, status, COD | weekly snapshot |
+| EIA Form 860 | generator | nameplate, status, owner | monthly / annual |
+| EIA 930 | balancing authority hourly | system context | daily / hourly |
+| ISO / RTO interconnection queues | interconnection request | milestone and queue-risk context | weekly / monthly |
+| Regulatory dockets | proceeding | approval and schedule risk | weekly while open |
 | NREL / EIA technology benchmarks | technology | screening assumptions | annual |
 
-## 10. Known limitations
+## 15. Missing-data treatment
 
-- This is not Meta's full global portfolio.
+Missing values are preserved explicitly.
+
+Examples:
+
+- missing AC rating is not converted from DC without a documented basis;
+- missing COD is not assigned a midpoint year;
+- unresolved market allocation is not split evenly;
+- unknown queue identifiers are not guessed;
+- missing technology detail is not inferred from counterparty name alone.
+
+Derived metrics must distinguish between zero and unknown.
+
+## 16. Stress treatment
+
+Scenario stress may shift COD by 0–3 years only for non-operating rows meeting predefined risk conditions, such as:
+
+- at least one high-risk dimension, or
+- at least two medium-risk dimensions.
+
+Missing COD remains missing under stress.
+
+Deferred MW is a timing screen only. It is not a load deficit or proof of project failure.
+
+## 17. Known limitations
+
+- The dataset is not a complete representation of any company's global energy portfolio.
 - Several public announcements disclose MWdc only.
-- Multi-market aggregate deals cannot be allocated cleanly without public project-level detail.
+- Multi-market aggregate deals cannot always be allocated cleanly.
 - Queue identifiers are not confidently matched for every commercial project.
-- No contract price, tenor economics, congestion basis, credit support or mark-to-market is modeled.
-- No actual Meta campus load profile is modeled.
-- Firm scenarios and Portfolio Health are learning constructs, not industry-standard accredited metrics.
-
-## 11. Interview framing
-
-> “I wanted to understand the portfolio properly, so I tried to build a health view from public data. I found that the hard part was not charting MW. It was defining what should count, what should stay unresolved, how much of a project is actually useful for a given planning question, and which missing inputs prevent a number from becoming decision-grade.”
-
-
-## Integration review model
-
-The review reads the same filtered asset objects and firmness function as the dashboard, without parsing formatted cards. Each action is keyed by asset ID and cause; one asset may have several actions. Actions are ranked by high/medium severity and normalized capacity. Excluded capacity remains visible for data diligence but does not affect exposure ranking.
-
-Supply by the selected year includes operating rows and non-operating rows with integer COD at or before the horizon. Stress shifts COD by 0–3 years only for non-operating rows with a high risk or at least two medium risks. Missing COD stays excluded from dated supply and is reported separately in MWac. Unknown dates are never assumed available. A deferred MW screen is not a load deficit, accredited capacity or proof of geographic deliverability.
-
-Local action records store owner, due date, status, evidence and update timestamp. Closure requires nonblank evidence but does not revise the public asset model. Saved review baselines compare only identical scope/market/technology/risk/firmness filters. No automatic source refresh is performed. Notes and baselines use browser local storage; Markdown export is the sharing path.
-
-
-## Portfolio monitor and procurement readiness
-
-Physical lifecycle is derived from the disclosed status: operating, commissioning, construction (excluding pre-construction), or development. Lifecycle does not establish the start of contractual delivery. The COD chart sums normalized MWac from operating rows and rows with integer COD through the displayed year, excludes unresolved COD, and never invents phase allocations. Full project blocks may therefore appear only at their model COD. These are disclosed timing inputs, not electrical-load coverage.
-
-Procurement gates flag missing source/definition fields, missing COD or high risks, and unresolved/multi-market allocation. A fields-present label does not verify factual accuracy. Commercial economics, load/deliverability and asset-level freshness remain not available. The executive draft is rule-based and selects the largest normalized flagged exposure; it is not generated by an LLM and does not authorize procurement.
-
-
-## Free local AI
-
-WebLLM 0.2.85 runs Qwen2.5 1.5B in a Web Worker using WebGPU. The model is q4f16 when shader-f16 is supported, otherwise q4f32. A user click initiates the download; no inference service receives portfolio prompts. Runtime and weights are downloaded from external CDNs/model hosts.
-
-Grounding uses deterministic filtered totals and six priority asset rows maximum, ranked by high/medium risk, missing COD and then AC capacity. It does not send local action notes or fetch live source content. The prompt separates evidence from instructions and prohibits invented economics and approvals. The output is untrusted plain text, never executable markup. Source links are built from the dataset, not model URLs. Unknown source references are flagged, but this is not factual verification. Filters changing mark existing output stale. Calls are single-flight and generation times out after two minutes. Human review remains required.
+- Contract price, tenor economics, congestion basis, credit support, and mark-to-market are not modeled.
+- Actual facility load profiles are not modeled unless explicitly available from a defensible source.
+- Firm-capacity scenarios are analytical screening assumptions, not accredited planning values.
+- Portfolio Health is a transparent analytical construct, not an industry-standard metric.
+- Source freshness varies by project and data source.
