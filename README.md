@@ -6,6 +6,14 @@
 
 A decision-oriented energy portfolio health tracker built from public disclosures to explore how hyperscaler-scale and data-center energy portfolios can be normalized, monitored, and stress-tested.
 
+## Free AI analyst
+
+Click **Load free AI**, then generate a leadership brief, risk explanation or suggested team handoffs. Qwen2.5 1.5B runs locally through WebLLM in a Web Worker. No API key, server or per-request model charge is required. The first load downloads model files and needs a WebGPU-capable browser with adequate memory and storage; speed depends on your device. CDN/model downloads require internet access.
+
+The AI receives calculated portfolio facts and at most six prioritized asset rows. Inputs remain on-device. Source assets are shown alongside the draft. Changed filters mark the draft stale. AI cannot modify data, close actions or approve procurement. Compact models can hallucinate; check every claim. Existing rule-based briefs remain available when local inference is unavailable.
+
+Runtime pinned to WebLLM 0.2.85. Model files are cached by the runtime; releasing GPU memory does not delete the cache. Clear site storage to remove cached downloads. No paid AI Gateway dependency is included.
+
 ## Portfolio monitoring workspace
 
 The opening view shows portfolio condition, normalized KPIs, physical asset lifecycle and cumulative disclosed COD. The asset register supports search and lifecycle filters. Table search is separate from portfolio-wide filters.
