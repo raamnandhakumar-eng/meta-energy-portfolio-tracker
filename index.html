@@ -15,7 +15,7 @@
       <div class="brand-lockup">
         <div>
           <div class="brand-name">ENERGY PORTFOLIO</div>
-          <div class="brand-sub">Integration control room</div>
+          <div class="brand-sub">Portfolio operations</div>
         </div>
       </div>
 
@@ -23,7 +23,7 @@
         <a class="nav-item active" href="#overview"><span class="nav-icon">01</span><span>Overview</span></a>
         <a class="nav-item" href="#delivery"><span class="nav-icon">02</span><span>Delivery</span></a>
         <a class="nav-item" href="#portfolio"><span class="nav-icon">03</span><span>Exposure</span></a>
-        <a class="nav-item" href="#assets"><span class="nav-icon">04</span><span>Asset register</span></a>
+        <a class="nav-item" href="#assets"><span class="nav-icon">04</span><span>Assets</span></a>
       </nav>
 
       <div class="rail-footer">
@@ -35,23 +35,22 @@
     <main class="workspace">
       <header class="workspace-header">
         <div class="header-copy">
-          <div class="breadcrumb">Energy integration / Portfolio operations</div>
+          <div class="breadcrumb">Portfolio operations</div>
           <div class="title-row">
-            <h1>Energy portfolio control room</h1>
-            <span class="snapshot-pill">Snapshot · 09 Sep 2026</span>
+            <h1>Energy portfolio</h1>
+            <span class="snapshot-pill">09 Sep 2026</span>
           </div>
-          <p>Portfolio health, delivery exposure, cross-functional actions and procurement readiness in one operating view.</p>
+          <p>Health, delivery exposure, actions and procurement readiness in one operating view.</p>
         </div>
         <div class="header-actions">
           <button id="methodBtn" class="button secondary">Methodology</button>
-          <a class="button secondary" href="https://github.com/raamnandhakumar-eng/energy-portfolio-health-tracker" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a class="button" href="/docs/DATA_MODEL.md" target="_blank" rel="noreferrer">Data model ↗</a>
+          <a class="button" href="/docs/DATA_MODEL.md" target="_blank" rel="noreferrer">Data model</a>
         </div>
       </header>
 
       <section class="boundary-banner" role="note">
         <span class="info-icon">i</span>
-        <div><strong>Public-data boundary.</strong> This is a portfolio operating-system prototype, not a company system of record. Public compute-scale announcements are not treated as electrical peak load. Firmness is a screening scenario, not ELCC, UCAP or ISO-accredited capacity.</div>
+        <div><strong>Public-data model.</strong> Compute-scale announcements are not treated as electrical peak load. Firmness is a screening scenario, not accredited capacity.</div>
       </section>
 
       <section class="view-toolbar" aria-label="Portfolio filters">
@@ -73,7 +72,7 @@
 
       <section id="overview" class="ops-section">
         <div class="section-heading">
-          <div><h2>Portfolio health</h2><p>Current condition, key metrics and the highest-priority exceptions.</p></div>
+          <div><h2>Portfolio health</h2><p>Current condition, key metrics and priority exceptions.</p></div>
           <span class="section-meta">Executive review</span>
         </div>
 
@@ -82,7 +81,7 @@
         <section class="command-grid">
           <article class="health-card card" id="healthCard"></article>
           <article class="attention-card card">
-            <div class="card-head"><div><span class="card-kicker">Exception queue</span><h3>Needs attention</h3></div><span class="unit">impact · risk · data gaps</span></div>
+            <div class="card-head"><div><span class="card-kicker">Exception queue</span><h3>Needs attention</h3></div><span class="unit">impact · risk · gaps</span></div>
             <div id="attentionList" class="attention-list"></div>
           </article>
         </section>
@@ -90,7 +89,7 @@
 
       <section id="delivery" class="ops-section">
         <div class="section-heading">
-          <div><h2>Delivery &amp; firmness</h2><p>Where capacity sits, when it is expected and how delivery risk changes the planning view.</p></div>
+          <div><h2>Delivery &amp; firmness</h2><p>Capacity, timing and delivery risk.</p></div>
           <span class="section-meta">Planning view</span>
         </div>
 
@@ -104,7 +103,7 @@
 
       <section id="portfolio" class="ops-section">
         <div class="section-heading">
-          <div><h2>Portfolio exposure</h2><p>Concentration, source quality and the limits of what public data can support.</p></div>
+          <div><h2>Portfolio exposure</h2><p>Concentration, data quality and public-data limits.</p></div>
           <span class="section-meta">Risk view</span>
         </div>
 
@@ -118,7 +117,7 @@
 
       <section id="assets" class="ops-section asset-section">
         <div class="section-heading asset-heading">
-          <div><h2>Asset register</h2><p>Source-level rows behind the portfolio view and decision-support metrics.</p></div>
+          <div><h2>Asset register</h2><p>Source-level rows behind the portfolio view.</p></div>
           <div id="tableCount" class="table-count"></div>
         </div>
 
