@@ -2,7 +2,7 @@
 
 A public-data **energy portfolio control room** built to explore how an Energy Integration Manager could connect portfolio health, delivery risk, data quality, cross-functional actions, procurement readiness, and AI-assisted reporting in one operating view.
 
-[**Live app → energy-portfolio-health-tracker-ciel5.vercel.app**](https://energy-portfolio-health-tracker-ciel5.vercel.app/)
+[**Live app → energy-portfolio-health-tracker-seven.vercel.app**](https://energy-portfolio-health-tracker-seven.vercel.app/)
 
 > Independent public-data learning project. Not affiliated with or endorsed by Meta or any other company. No internal company data is used.
 
