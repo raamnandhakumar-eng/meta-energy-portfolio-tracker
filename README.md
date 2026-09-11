@@ -1,83 +1,74 @@
 # Energy Portfolio Health Tracker
 
-[**Live Demo → energy-portfolio-healthtracker.vercel.app**](https://energy-portfolio-healthtracker.vercel.app/)
+A public-data **energy portfolio control room** built to explore how an Energy Integration Manager could connect portfolio health, delivery risk, data quality, cross-functional actions, procurement readiness, and AI-assisted reporting in one operating view.
 
-**Independent public-data learning project. Not affiliated with or endorsed by any other company. No internal company data is used.**
+[**Live app → energy-portfolio-healthtracker.vercel.app**](https://energy-portfolio-healthtracker.vercel.app/)  
+[**GitHub repository → raamnandhakumar-eng/energy-portfolio-health-tracker**](https://github.com/raamnandhakumar-eng/energy-portfolio-health-tracker)
 
-A decision-oriented energy portfolio health tracker built from public disclosures to explore how hyperscaler-scale and data-center energy portfolios can be normalized, monitored, and stress-tested.
+> Independent public-data learning project. Not affiliated with or endorsed by Meta or any other company. No internal company data is used.
+
+## What the control room does
+
+The first screen is designed around a portfolio review rather than a generic dashboard.
+
+- **Portfolio pulse:** health score, delivery exposure, unresolved COD, data confidence, and management focus.
+- **Delivery view:** market capacity, firmness scenarios, delivery-risk causes, lifecycle status, and disclosed COD timing.
+- **Exception queue:** surfaces the highest-impact assets with risk or data gaps.
+- **Integration review:** assigns functional owners, due dates, status, evidence, and decision notes to open issues.
+- **Procurement readiness:** makes cross-team evidence gates explicit across Analytics, Asset Management, Wholesale, Origination, Infrastructure, and Finance.
+- **Leadership brief:** converts the applied portfolio view into an executive-ready situation, exposure, priority handoff, decision request, and next forum.
+- **Scenario review:** stress-tests delivery timing with 0–3 year delays to flagged development assets.
+- **Saved review comparison:** compares health, capacity, COD, and risk changes against a browser-local baseline.
+- **Decision brief export:** downloads a review record with assumptions, actions, evidence requirements, and source lineage.
 
 ## Free AI analyst
 
-Click **Load free AI**, then generate a leadership brief, risk explanation or suggested team handoffs. Qwen2.5 1.5B runs locally through WebLLM in a Web Worker. No API key, server or per-request model charge is required. The first load downloads model files and needs a WebGPU-capable browser with adequate memory and storage; speed depends on your device. CDN/model downloads require internet access.
+The app includes an optional local AI workflow for:
 
-The AI receives calculated portfolio facts and at most six prioritized asset rows. Inputs remain on-device. Source assets are shown alongside the draft. Changed filters mark the draft stale. AI cannot modify data, close actions or approve procurement. Compact models can hallucinate; check every claim. Existing rule-based briefs remain available when local inference is unavailable.
+- drafting a leadership brief,
+- explaining priority risks,
+- suggesting cross-functional handoffs.
 
-Runtime pinned to WebLLM 0.2.85. Model files are cached by the runtime; releasing GPU memory does not delete the cache. Clear site storage to remove cached downloads. No paid AI Gateway dependency is included.
+Qwen2.5 1.5B runs locally through WebLLM in a Web Worker. No API key or per-request model charge is required. The model receives calculated portfolio facts and a small set of prioritized asset rows. It cannot change data, close actions, or approve procurement decisions.
 
-## Portfolio monitoring workspace
-
-The opening view shows portfolio condition, normalized KPIs, physical asset lifecycle and cumulative disclosed COD. The asset register supports search and lifecycle filters. Table search is separate from portfolio-wide filters.
-
-Procurement readiness links Data/Analytics, Asset Management, Wholesale and Origination through explicit evidence gates. Missing commercial, load/deliverability and freshness inputs remain visible. An automated, rule-based leadership brief identifies exposure, the largest flagged asset, the next handoff and the decision requested. It is downloadable with source lineage. This is reporting automation, not an LLM integration or live monitoring system.
-
-## Integration manager workflow
-
-- Run a planning-year scenario with 0–3 years of delay to flagged development assets. Compare baseline supply, delayed supply and unresolved COD capacity.
-- Track each regulatory, interconnection, construction and data issue with an editable owner, review date, status and evidence.
-- Close an action only after recording evidence. Closing diligence does not change public risk ratings or the health score.
-- Save a review baseline and compare capacity, health, COD/risk changes and added/removed assets under identical filters.
-- Download a Markdown brief with the applied scope, assumptions, next actions and source links.
-
-Actions and baselines stay in your browser. This is a public-data workflow demonstration, not a shared company system or procurement approval engine. No new public-source verification or live feed is implied.
+Compact models can hallucinate. Every AI output should be checked against the supplied source assets.
 
 ## Current case study
 
-**Meta — public disclosures only.**
+The current dataset uses **Meta-related public disclosures** as the first case study because it provides a useful hyperscaler-scale energy portfolio example.
 
-The current dataset uses publicly available information associated with Meta's disclosed U.S. energy portfolio and related projects. Meta is the first case study, not the limit of the framework.
+The framework itself is company-agnostic. The same schema can support future public-data modules for other hyperscalers and large data-center operators.
 
-The model is intentionally company-agnostic so future portfolio modules can incorporate publicly disclosed energy data from other hyperscalers and large data-center operators such as Google, Microsoft, Amazon/AWS, Oracle, CoreWeave, xAI, and others while keeping the same metric definitions and analytical framework.
+## Core portfolio metrics
 
-## What it shows
-
-- Contracted and disclosed capacity by market and technology
-- Low / base / high firm-capacity screening scenarios
-- COD and delivery-risk exposure by regulatory, interconnection, and construction cause
-- Counterparty and market concentration, including HHI
-- Cumulative campus-linked supply against publicly disclosed infrastructure scale
-- Asset-level data confidence and source lineage
-- A ranked **Needs attention** queue for the highest-priority portfolio issues
-- Why a defensible annual matched percentage cannot be reconstructed from public announcements alone
-
-## Why I built it
-
-I wanted to understand the mechanics behind a large energy portfolio rather than treat "contracted MW" as a single clean number. Building the model forces explicit decisions about MWac vs MWdc, power vs energy, capacity factor vs firm capacity, COD uncertainty, contract structure, geography, and missing data.
+- normalized contracted/disclosed MWac,
+- low/base/high firmness screening,
+- expected generation where defensible,
+- regulatory, interconnection, and construction exposure,
+- unresolved COD,
+- lifecycle status,
+- counterparty concentration,
+- market concentration,
+- asset-level data confidence,
+- source lineage.
 
 The project intentionally preserves unknown values instead of manufacturing precision.
 
 ## Data discipline
 
-Read [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) before the dashboard code. It defines the entities, grain, units, metric formulas, assumptions, source families, refresh cadence, and known limitations.
+Read [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) for the entity definitions, grain, units, assumptions, source families, formulas, refresh logic, and known limitations.
 
-Key rules include:
+Important rules:
 
 - MWdc and MWac are never added together.
-- Expected generation is modeled separately from firm-capacity contribution.
-- Firm capacity is presented as a screening scenario, not ELCC, UCAP, or ISO-accredited capacity.
-- Public campus-scale figures are treated only as directional infrastructure/compute-scale proxies unless electrical peak load is explicitly disclosed.
-- Annual matching remains **not defensible** without internal load, settlement, REC/EAC, curtailment, allocation, and temporal-matching data.
+- Expected generation is separate from firm-capacity contribution.
+- Firmness is a screening scenario, not ELCC, UCAP, or ISO-accredited capacity.
+- Public compute or campus-scale announcements are not treated as electrical peak load unless explicitly disclosed.
+- Annual load matching cannot be reconstructed defensibly without internal load, settlement, allocation, curtailment, and REC/EAC data.
 
 ## Public source families
 
-The model uses public information from company and utility announcements, EIA Form 860 / EIA 930, NREL, ISO/RTO interconnection queues, and relevant regulatory dockets where available. Source URLs are retained at the asset level.
-
-## Live deployment
-
-The current production deployment is available at:
-
-**https://energy-portfolio-healthtracker.vercel.app/**
-
-The app is deployed from the `main` branch on Vercel.
+The model uses public company and utility announcements, EIA data, NREL references, ISO/RTO interconnection information, and relevant regulatory materials where available. Source URLs are retained at the asset level.
 
 ## Run locally
 
@@ -101,37 +92,27 @@ The validator checks required fields, unit normalization, risk labels, duplicate
 .
 ├── index.html
 ├── styles.css
+├── portfolio-monitor.css
 ├── app.js
+├── portfolio-pulse.js
+├── portfolio-monitor.js
+├── integration-review.js
+├── procurement-review.js
+├── local-ai.js
+├── ai-context.js
 ├── data-loader.js
 ├── data/
-│   ├── core.json
-│   ├── assets-1.json
-│   ├── assets-2.json
-│   ├── assets-3.json
-│   └── assets-4.json
 ├── docs/
-│   └── DATA_MODEL.md
 ├── scripts/
-│   └── validate.py
 ├── vercel.json
 ├── CHANGELOG.md
 └── LICENSE
 ```
 
-## Roadmap
-
-- Add additional company case studies using the same normalized schema
-- Add a company selector for cross-portfolio comparison
-- Expand ISO/RTO queue and regulatory milestone coverage
-- Improve public-source refresh automation
-- Preserve company-specific uncertainty rather than forcing false comparability
-
 ## Interview framing
 
-> “I wanted to understand the portfolio properly, so I tried to build a health view from public data. The biggest lesson was how many judgment calls sit inside a number that looks simple, like contracted capacity.”
+> “I built this as an energy portfolio operating-system prototype, not just a dashboard. The goal was to connect source data, delivery exposure, owners, evidence, review cadence, procurement gates, and executive communication in one decision workflow.”
 
 ## License
 
 MIT. See [`LICENSE`](LICENSE).
-
-<!-- deployment-sync: 2026-09-10 -->
