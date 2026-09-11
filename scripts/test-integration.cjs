@@ -1,0 +1,13 @@
+const assert = require('node:assert/strict');
+const {delivery} = require('../integration-review.js');
+const asset = (fields={}) => ({count_in_normalized_capacity:true,capacity_mw_ac:100,cod_year:2030,status:'Development',risk:{construction:'high'},...fields});
+const firm = a => a.capacity_mw_ac * .5;
+const rows = [asset(),asset({status:'Operating',cod_year:null}),asset({cod_year:null}),asset({count_in_normalized_capacity:false,capacity_mw_ac:9999})];
+assert.deepEqual(delivery(rows,2030,1,firm),{base:100,stress:50,deferred:50,unknown:100});
+assert.deepEqual(delivery(rows,2030,0,firm),{base:100,stress:100,deferred:0,unknown:100});
+assert.equal(delivery(rows,2031,1,firm).deferred,0);
+assert.equal(delivery([asset({risk:{construction:'medium'}})],2030,1,firm).deferred,0);
+assert.equal(delivery([asset({risk:{construction:'medium',regulatory:'medium'}})],2030,1,firm).deferred,50);
+assert.deepEqual(delivery([],2030,1,firm),{base:0,stress:0,deferred:0,unknown:0});
+assert.equal(delivery([asset({status:'Commissioning',cod_year:null})],2030,1,firm).unknown,100);
+console.log('7 delivery checks passed: delays, operating assets, unresolved COD, exclusions and empty views.');

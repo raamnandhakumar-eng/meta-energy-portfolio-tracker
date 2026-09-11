@@ -117,3 +117,12 @@ v2 adds an illustrative 24-hour technology-shape experiment only to demonstrate 
 ## 11. Interview framing
 
 > “I wanted to understand the portfolio properly, so I tried to build a health view from public data. I found that the hard part was not charting MW. It was defining what should count, what should stay unresolved, how much of a project is actually useful for a given planning question, and which missing inputs prevent a number from becoming decision-grade.”
+
+
+## Integration review model
+
+The review reads the same filtered asset objects and firmness function as the dashboard, without parsing formatted cards. Each action is keyed by asset ID and cause; one asset may have several actions. Actions are ranked by high/medium severity and normalized capacity. Excluded capacity remains visible for data diligence but does not affect exposure ranking.
+
+Supply by the selected year includes operating rows and non-operating rows with integer COD at or before the horizon. Stress shifts COD by 0–3 years only for non-operating rows with a high risk or at least two medium risks. Missing COD stays excluded from dated supply and is reported separately in MWac. Unknown dates are never assumed available. A deferred MW screen is not a load deficit, accredited capacity or proof of geographic deliverability.
+
+Local action records store owner, due date, status, evidence and update timestamp. Closure requires nonblank evidence but does not revise the public asset model. Saved review baselines compare only identical scope/market/technology/risk/firmness filters. No automatic source refresh is performed. Notes and baselines use browser local storage; Markdown export is the sharing path.
