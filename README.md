@@ -6,6 +6,12 @@
 
 A decision-oriented energy portfolio health tracker built from public disclosures to explore how hyperscaler-scale and data-center energy portfolios can be normalized, monitored, and stress-tested.
 
+## Portfolio monitoring workspace
+
+The opening view shows portfolio condition, normalized KPIs, physical asset lifecycle and cumulative disclosed COD. The asset register supports search and lifecycle filters. Table search is separate from portfolio-wide filters.
+
+Procurement readiness links Data/Analytics, Asset Management, Wholesale and Origination through explicit evidence gates. Missing commercial, load/deliverability and freshness inputs remain visible. An automated, rule-based leadership brief identifies exposure, the largest flagged asset, the next handoff and the decision requested. It is downloadable with source lineage. This is reporting automation, not an LLM integration or live monitoring system.
+
 ## Integration manager workflow
 
 - Run a planning-year scenario with 0–3 years of delay to flagged development assets. Compare baseline supply, delayed supply and unresolved COD capacity.
