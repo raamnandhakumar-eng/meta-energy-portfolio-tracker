@@ -1,10 +1,10 @@
 # Energy Portfolio Health Tracker
 
-A public-data **energy portfolio control room** built to explore how an Energy Integration Manager could connect portfolio health, delivery risk, data quality, cross-functional actions, procurement readiness, and AI-assisted reporting in one operating view.
+A public-data **energy portfolio control room** built to explore how an energy integration team could connect portfolio health, delivery risk, data quality, cross-functional actions, procurement readiness, and AI-assisted reporting in one operating view.
 
 [**Live app → energy-portfolio-health-tracker-seven.vercel.app**](https://energy-portfolio-health-tracker-seven.vercel.app/)
 
-> Independent public-data learning project. Not affiliated with or endorsed by Meta or any other company. No internal company data is used.
+> Independent public-data learning project. Not affiliated with or endorsed by any company. No internal company data is used.
 
 ## What the control room does
 
@@ -34,9 +34,9 @@ Compact models can hallucinate. Every AI output should be checked against the su
 
 ## Current case study
 
-The current dataset uses **Meta-related public disclosures** as the first case study because it provides a useful hyperscaler-scale energy portfolio example.
+The current dataset uses public disclosures from a hyperscale data-center energy portfolio as the first case study.
 
-The framework itself is company-agnostic. The same schema can support future public-data modules for other hyperscalers and large data-center operators.
+The framework is company-agnostic. The same schema can support public-data modules for other hyperscalers, utilities, developers, and large data-center operators.
 
 ## Core portfolio metrics
 
